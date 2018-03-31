@@ -1,11 +1,21 @@
+import edu.princeton.cs.introcs.StdRandom;
+
 public abstract class RouletteGame {
+    int numbers;
     int bet_options;
     int[] winnings;
     
-    void win(RoulettePlayer p, int option, int money) {
-        p.win(p.bet(option) * winnings[option] * money);
+    int roll() {
+        return StdRandom.uniform(numbers);
     }
-    void lose(RoulettePlayer p, int money) {
-        p.lose((1 - p.bet(bet_options - 1)) * money);
+    
+    abstract void roll_once(RoulettePlayer p);
+    
+    int win(RoulettePlayer p, int option) {
+        return (int)Math.floor(p.bet(option) * (double) p.getMoney());
+    }
+    
+    void update(RoulettePlayer p, int money, int num) {
+        p.update(money, num);
     }
 }
