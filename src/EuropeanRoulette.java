@@ -62,7 +62,7 @@ public class EuropeanRoulette extends RouletteGame{
         newmoney += oddEven(p, num);
         newmoney += column(p, num);
         
-        update(p, newmoney, num);
+        update(p, num, newmoney);
     }
     
     private int single(RoulettePlayer p, int num) {

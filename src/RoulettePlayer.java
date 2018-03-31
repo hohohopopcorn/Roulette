@@ -5,10 +5,12 @@ public class RoulettePlayer {
     private Tree currentTurn;
     private int startingFund;
     private int money = 0;
+    public int maxTurns;
     
-    RoulettePlayer(int rounds, int optionSize, int startingFund, int numbers) {
+    RoulettePlayer(int rounds, RouletteGame game, int startingFund) {
         this.startingFund = startingFund;
-        this.policy = new Tree(rounds, optionSize, numbers);
+        this.policy = new Tree(rounds, game.bet_options, game.numbers);
+        this.maxTurns = rounds;
         reset();
     }
     
@@ -40,7 +42,8 @@ public class RoulettePlayer {
         
         Tree(int rounds, int options, int numbers) {
             policy = new double[options];
-            nextTurn = new Tree[numbers];
+            //nextTurn = new Tree[numbers];
+            nextTurn = new Tree[1];
             
             double sum = 0;
             for (int i = 0; i < policy.length; i++) {
@@ -74,7 +77,8 @@ public class RoulettePlayer {
         }
         
         Tree next(int num) {
-            return nextTurn[num];
+            //return nextTurn[num];
+            return nextTurn[0];
         }
     }
 }

@@ -5,7 +5,7 @@ public abstract class RouletteGame {
     int bet_options;
     int[] winnings;
     
-    int roll() {
+    protected int roll() {
         return StdRandom.uniform(numbers);
     }
     
@@ -19,7 +19,7 @@ public abstract class RouletteGame {
         return (int)Math.floor(p.bet(option) * (double) p.getMoney());
     }
     
-    void update(RoulettePlayer p, int money, int num) {
-        p.update(money, num);
+    void update(RoulettePlayer p, int num, int money) {
+        p.update(num, money);
     }
 }
