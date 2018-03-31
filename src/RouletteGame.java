@@ -16,7 +16,7 @@ public abstract class RouletteGame {
             throw new IllegalArgumentException();
         }
         
-        return (int) Math.floor(p.bet(option) * (double) p.getMoney());
+        return (int) Math.floor(p.bet(option) * winnings[option] * (double) p.getMoney());
     }
     
     void update(RoulettePlayer p, int num, int money) {

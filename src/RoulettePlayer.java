@@ -134,7 +134,7 @@ public class RoulettePlayer implements Mutatable {
         @Override
         public void mutate() {
             double mutationType = StdRandom.uniform();
-            double[] mutationBin = {0.40, 0.65, 0.70, 1.0};
+            double[] mutationBin = {0.30, 0.45, 0.50, 1.0};
             
             if (mutationType <= mutationBin[0]) { //complete reinitialize
                 init();
@@ -155,7 +155,7 @@ public class RoulettePlayer implements Mutatable {
                     policy[p2] = temp;
                 }
             } else { //displacement
-                double change = Math.min(Math.abs(StdRandom.gaussian()*0.5), 0.5);
+                double change = Math.min(Math.abs(StdRandom.gaussian()), 0.75);
                 for (int i = 0; i < policy.length; i++) {
                     policy[i] = policy[i] * (1 - change);
                 }
