@@ -1,13 +1,15 @@
+import GeneticAlgorithm.Mutatable;
+import GeneticAlgorithm.Simulation;
 import edu.princeton.cs.introcs.StdStats;
 
-public class Simulation {
+public class RouletteSimulation implements Simulation{
     private int money[][];
     private double fitness[];
     private int trials;
     private RouletteGame game;
     private double RISK_AVERSE = 1.0;
     
-    Simulation(int N, RouletteGame game, double risk) {
+    RouletteSimulation(int N, RouletteGame game, double risk) {
         fitness = new double[N];
         RISK_AVERSE = risk;
         trials = N;
@@ -23,7 +25,7 @@ public class Simulation {
             System.out.printf("%10d ", money[i][0]);
             
             for (int j = 0; j < player.maxTurns; j++) {
-                game.roll_once(player);
+                game.rollOnce(player);
                 money[i][j + 1] = player.getMoney();
                 System.out.printf("%10d ", money[i][j + 1]);
             }
@@ -31,8 +33,14 @@ public class Simulation {
         }
     }
     
-    double fitness(RoulettePlayer player) {
-        run(player);
+    RouletteGame getGame() {
+        return game;
+    }
+    
+    @Override
+    public double fitness(Mutatable player) {
+        assert (player instanceof RoulettePlayer);
+        run((RoulettePlayer) player);
         
         for (int i = 0; i < trials; i++) {
             fitness[i] = 0;
@@ -58,7 +66,7 @@ public class Simulation {
     }
     
     public static void main(String[] args) {
-        Simulation p = new Simulation(100, new EuropeanRoulette(), 0.5);
+        RouletteSimulation p = new RouletteSimulation(100, new EuropeanRoulette(), 0.5);
         
         System.out.println(p.fitness(new RoulettePlayer(20, new EuropeanRoulette(), 100)));
     }

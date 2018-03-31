@@ -9,14 +9,14 @@ public abstract class RouletteGame {
         return StdRandom.uniform(numbers);
     }
     
-    abstract void roll_once(RoulettePlayer p);
+    abstract void rollOnce(RoulettePlayer p);
     
     int win(RoulettePlayer p, int option) {
         if (option < 0 || option > bet_options) {
             throw new IllegalArgumentException();
         }
         
-        return (int)Math.floor(p.bet(option) * (double) p.getMoney());
+        return (int) Math.floor(p.bet(option) * (double) p.getMoney());
     }
     
     void update(RoulettePlayer p, int num, int money) {

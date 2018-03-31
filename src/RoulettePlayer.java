@@ -1,8 +1,6 @@
 import GeneticAlgorithm.Mutatable;
 import edu.princeton.cs.introcs.StdRandom;
 
-import java.io.ObjectInputValidation;
-
 public class RoulettePlayer implements Mutatable {
     private Tree policy;  //amount to bet on each option per turn
     private Tree currentTurn;

@@ -1,4 +1,4 @@
-public class EuropeanRoulette extends RouletteGame{
+public class EuropeanRoulette extends RouletteGame {
     EuropeanRoulette() {
         numbers = 37;
         bet_options = 37 //singles
@@ -47,7 +47,7 @@ public class EuropeanRoulette extends RouletteGame{
         winnings[bet_options - 1] = 1;  //holding money
     }
     
-    void roll_once(RoulettePlayer p) {
+    void rollOnce(RoulettePlayer p) {
         int num = roll();
         int newmoney = win(p, bet_options - 1);
         
