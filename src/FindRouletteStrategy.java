@@ -21,13 +21,14 @@ public class FindRouletteStrategy {
             best = (RoulettePlayer) GA.run();
             System.out.printf("%5d %10f    ", i + 1, game.fitness(best));
             game.show(best);
+            best.show();
         }
         return best;
     }
     
     public static void main (String[] args) {
-        RouletteSimulation p = new RouletteSimulation(1000, new EuropeanRoulette(), 0.5);
-        FindRouletteStrategy Strategy = new FindRouletteStrategy(p, 3, 100, 100000, 0.75);
+        RouletteSimulation p = new RouletteSimulation(1000, new EuropeanRoulette(), 0.75);
+        FindRouletteStrategy Strategy = new FindRouletteStrategy(p, 1, 100, 1000000, 0.99);
         RoulettePlayer best = Strategy.run(1000000, p);
     }
 }

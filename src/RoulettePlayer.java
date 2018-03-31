@@ -44,6 +44,10 @@ public class RoulettePlayer implements Mutatable {
         currentTurn = currentTurn.next(num);
     }
     
+    void show() {
+        policy.show();
+    }
+    
     @Override
     public void mutate() {
         policy.mutate();
@@ -86,10 +90,21 @@ public class RoulettePlayer implements Mutatable {
             copy(p);
         }
         
+        void show() {
+            for (int i = 0; i < policy.length; i++) {
+                System.out.printf("%d ", (int)(100.0 * policy[i]));
+            }
+            System.out.println();
+            if (nextTurn != null) {
+                nextTurn.show();
+            }
+        }
+        
         void init() {
             double sum = 0;
-            for (int i = 0; i < policy.length; i++) {
-                policy[i] = StdRandom.uniform();
+            for (int j = 0; j < 5; j++) {
+                int i = StdRandom.uniform(policy.length);
+                policy[i] = Math.abs(StdRandom.gaussian());
                 sum += policy[i];
             }
             for (int i = 0; i < policy.length; i++) {
@@ -119,7 +134,7 @@ public class RoulettePlayer implements Mutatable {
         @Override
         public void mutate() {
             double mutationType = StdRandom.uniform();
-            double[] mutationBin = {0.05, 0.35, 0.4, 1.0};
+            double[] mutationBin = {0.40, 0.65, 0.70, 1.0};
             
             if (mutationType <= mutationBin[0]) { //complete reinitialize
                 init();
@@ -140,12 +155,12 @@ public class RoulettePlayer implements Mutatable {
                     policy[p2] = temp;
                 }
             } else { //displacement
-                double[] temp = new double[policy.length];
-                System.arraycopy(temp, 0, policy,0, policy.length);
-                
+                double change = Math.min(Math.abs(StdRandom.gaussian()*0.5), 0.5);
                 for (int i = 0; i < policy.length; i++) {
-                    policy[i] = temp[i] * 0.7 + policy[i] * 0.3;
+                    policy[i] = policy[i] * (1 - change);
                 }
+                int idx = StdRandom.uniform(policy.length);
+                policy[idx] += change;
             }
             
             if (nextTurn != null) {
