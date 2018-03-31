@@ -12,6 +12,10 @@ public abstract class RouletteGame {
     abstract void roll_once(RoulettePlayer p);
     
     int win(RoulettePlayer p, int option) {
+        if (option < 0 || option > bet_options) {
+            throw new IllegalArgumentException();
+        }
+        
         return (int)Math.floor(p.bet(option) * (double) p.getMoney());
     }
     
