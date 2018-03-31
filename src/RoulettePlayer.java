@@ -13,8 +13,8 @@ public class RoulettePlayer {
     }
     
     void reset() { //player starts without losing any money
-        this.currentTurn = this.policy;
-        this.money = this.startingFund;
+        currentTurn = policy;
+        money = startingFund;
     }
     
     void copy(RoulettePlayer p) {  // copy policy of player p
@@ -31,7 +31,7 @@ public class RoulettePlayer {
     
     void update(int num, int new_money){
         money = new_money;
-        currentTurn = currentTurn.nextTurn[num];
+        currentTurn = currentTurn.next(num);
     }
     
     private class Tree {
@@ -39,28 +39,28 @@ public class RoulettePlayer {
         private Tree[] nextTurn;
         
         Tree(int rounds, int options, int numbers) {
-            this.policy = new double[options];
-            this.nextTurn = new Tree[numbers];
+            policy = new double[options];
+            nextTurn = new Tree[numbers];
             
             double sum = 0;
-            for (int i = 0; i < this.policy.length; i++) {
-                this.policy[i] = StdRandom.uniform();
-                sum += this.policy[i];
+            for (int i = 0; i < policy.length; i++) {
+                policy[i] = StdRandom.uniform();
+                sum += policy[i];
             }
-            for (int i = 0; i < this.policy.length; i++) {
-                this.policy[i] = this.policy[i] / sum;
+            for (int i = 0; i < policy.length; i++) {
+                policy[i] = policy[i] / sum;
             }
             
-            for (int i = 0; i < this.nextTurn.length; i++) {
-                this.nextTurn[i] = null;
+            for (int i = 0; i < nextTurn.length; i++) {
+                nextTurn[i] = null;
                 if (rounds > 1) {
-                    this.nextTurn[i] = new Tree(rounds - 1, options, numbers);
+                    nextTurn[i] = new Tree(rounds - 1, options, numbers);
                 }
             }
         }
         
         void copy(Tree p) {
-            System.arraycopy(p.policy, 0, this.policy, 0, this.policy.length);
+            System.arraycopy(p.policy, 0, policy, 0, policy.length);
             
             for(int i = 0; i < nextTurn.length; i++) {
                 if(p.nextTurn[i] != null) {
@@ -71,6 +71,10 @@ public class RoulettePlayer {
         
         double get(int option) {
             return policy[option];
+        }
+        
+        Tree next(int num) {
+            return nextTurn[num];
         }
     }
 }
