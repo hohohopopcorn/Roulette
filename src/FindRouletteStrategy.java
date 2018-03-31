@@ -4,7 +4,7 @@ import GeneticAlgorithm.Simulation;
 public class FindRouletteStrategy {
     GeneticAlgorithm GA;
     
-    FindRouletteStrategy(Simulation game, int round, int startingFunds, int popsize) {
+    public FindRouletteStrategy(Simulation game, int round, int startingFunds, int popsize, double rate) {
         assert (game instanceof RouletteSimulation);
         RoulettePlayer[] pop = new RoulettePlayer[popsize];
         
@@ -12,11 +12,22 @@ public class FindRouletteStrategy {
             pop[i] = new RoulettePlayer(round, ((RouletteSimulation) game).getGame(), startingFunds);
         }
         
-        GA = new GeneticAlgorithm(game, pop);
+        GA = new GeneticAlgorithm(game, pop, rate);
+    }
+    
+    public RoulettePlayer run(int iterations, RouletteSimulation game) {
+        RoulettePlayer best = null;
+        for (int i = 0; i < iterations; i++) {
+            best = (RoulettePlayer) GA.run();
+            System.out.printf("%5d %10f    ", i + 1, game.fitness(best));
+            game.show(best);
+        }
+        return best;
     }
     
     public static void main (String[] args) {
-        RouletteSimulation p = new RouletteSimulation(100, new EuropeanRoulette(), 0.5);
-        FindRouletteStrategy Strategy = new FindRouletteStrategy(p, 20, 100, 1000);
+        RouletteSimulation p = new RouletteSimulation(1000, new EuropeanRoulette(), 0.5);
+        FindRouletteStrategy Strategy = new FindRouletteStrategy(p, 3, 100, 100000, 0.75);
+        RoulettePlayer best = Strategy.run(1000000, p);
     }
 }

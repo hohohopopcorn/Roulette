@@ -1,36 +1,52 @@
 package GeneticAlgorithm;
 
+import edu.princeton.cs.introcs.StdRandom;
+
 public class GeneticAlgorithm {
-    GeneMap[] population;
-    Simulation game;
+    private SortedGeneMap population;
+    private double selectionRate;
     
-    public GeneticAlgorithm(Simulation game, Mutatable[] population) {
-        this.game = game;
-        this.population = population;
+    public GeneticAlgorithm(Simulation game, Mutatable[] population, double rate) {
+        this.selectionRate = rate;
+        this.population = new SortedGeneMap(population.length, game);
+        for (int i = 0; i < population.length; i++) {
+            this.population.insert(population[i]);
+        }
     }
     
-    public Mutatable run(int generations) {
+    public Mutatable run() {
+        selection();
+        reproduction();
+        return population.get(0);
+    }
+    
+    private int findPartner(int maxNum) {
+        double num = Math.abs(StdRandom.gaussian(0, (double) maxNum / 3.0));
+        if (num >= (double) maxNum) {
+            num = 0;
+        }
+        return (int) Math.floor(num);
+    }
+    
+    private void reproduction () {
+        int emptySlots = population.emptySlots();
+        Mutatable[] children = new Mutatable[emptySlots];
         
-        return population[0];
+        for (int i = 0; i < emptySlots; i++) {
+            Mutatable p1 = population.get(findPartner(population.getLength()));
+            Mutatable p2 = population.get(findPartner(population.getLength()));
+            children[i] = p1.reproduction(p2);
+        }
+        for (int i = 0; i < emptySlots; i++) {
+            population.insert(children[i]);
+        }
     }
     
-    
-    
-    private void mutate(Mutatable obj) {
-        obj.mutate();
-    }
-    private Mutatable[] reproduction (Mutatable[] obj) {
-        return obj;
-    }
-    
-    private Mutatable[] selection(Mutatable[] obj) {
-        return obj;
-    }
-    
-    private class GeneMap {
-        Mutatable Gene;
-        double fit;
-        
-        GeneMap ()
+    private void selection() {
+        //simple cutoff selection
+        int cutoff= (int) Math.floor((double) population.getLength() * selectionRate);
+        while (population.getLength() != cutoff) {
+            population.remove(population.getLength() - 1);
+        }
     }
 }

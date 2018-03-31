@@ -22,14 +22,14 @@ public class RouletteSimulation implements Simulation{
             player.reset();
             money[i][0] = player.getMoney();
             
-            System.out.printf("%10d ", money[i][0]);
+            //System.out.printf("%10d ", money[i][0]);
             
             for (int j = 0; j < player.maxTurns; j++) {
                 game.rollOnce(player);
                 money[i][j + 1] = player.getMoney();
-                System.out.printf("%10d ", money[i][j + 1]);
+                //System.out.printf("%10d ", money[i][j + 1]);
             }
-            System.out.println();
+            //System.out.println();
         }
     }
     
@@ -45,11 +45,34 @@ public class RouletteSimulation implements Simulation{
         for (int i = 0; i < trials; i++) {
             fitness[i] = 0;
             for (int j = 1; j < money[i].length; j++) {
-                fitness[i] += (double) (money[i][j] - money[i][0]) / (double) money[i][0] * (double) j;
+                fitness[i] += (double) money[i][j] / (double) money[i][0] * (double) j;
             }
         }
         
         return RISK_AVERSE * confidenceLow() + (1.0 - RISK_AVERSE) * mean();
+    }
+    
+    public void show(RoulettePlayer player) {
+        money = new int[trials][player.maxTurns + 1];
+        for (int i = 0; i < trials; i++) {
+            player.reset();
+            money[i][0] = player.getMoney();
+        
+            for (int j = 0; j < player.maxTurns; j++) {
+                game.rollOnce(player);
+                money[i][j + 1] = player.getMoney();
+            }
+        }
+    
+        System.out.printf("%5d ", money[0][0]);
+        for (int i = 0; i < player.maxTurns; i++) {
+            double average = 0;
+            for (int j = 0; j < trials; j++) {
+                average += (double) money[j][i + 1] / (double) trials;
+            }
+            System.out.printf("%5d ", (int)average);
+        }
+        System.out.println();
     }
     
     private double mean() {

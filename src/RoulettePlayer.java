@@ -16,8 +16,8 @@ public class RoulettePlayer implements Mutatable {
     }
     RoulettePlayer(RoulettePlayer p) {
         this.startingFund = p.startingFund;
-        this.policy.copy(p.policy);
         this.maxTurns = p.maxTurns;
+        this.copy(p);
         reset();
     }
     
@@ -27,6 +27,7 @@ public class RoulettePlayer implements Mutatable {
     }
     
     void copy(RoulettePlayer p) {  // copy policy of player p
+        this.policy = new Tree(p.maxTurns, p.policy.length);
         this.policy.copy(p.policy);
     }
     
@@ -97,6 +98,7 @@ public class RoulettePlayer implements Mutatable {
         }
         
         void copy(Tree p) {
+            this.policy = new double[p.policy.length];
             System.arraycopy(p.policy, 0, policy, 0, policy.length);
             
             nextTurn = null;
@@ -142,7 +144,7 @@ public class RoulettePlayer implements Mutatable {
                 System.arraycopy(temp, 0, policy,0, policy.length);
                 
                 for (int i = 0; i < policy.length; i++) {
-                    policy[i] = temp[i] * 0.9 + policy[i] * 0.1;
+                    policy[i] = temp[i] * 0.7 + policy[i] * 0.3;
                 }
             }
             
