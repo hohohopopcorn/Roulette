@@ -3,7 +3,7 @@ import GeneticAlgorithm.Simulation;
 import edu.princeton.cs.introcs.StdStats;
 
 public class RouletteSimulation implements Simulation{
-    private int[] money;
+    private double[] money;
     private int numbers;
     private RouletteGame game;
     
@@ -13,7 +13,7 @@ public class RouletteSimulation implements Simulation{
     }
     
     private void run(RoulettePlayer player, int start, int turns) {
-        int expected = 0;
+        double expected = 0;
         RoulettePlayer p = new RoulettePlayer(player);
         
         for (int i = 0; i < numbers; i++) {
@@ -22,12 +22,12 @@ public class RouletteSimulation implements Simulation{
                 p.update(start);
             }
             game.rollOnce(p, i);
-            expected += p.getMoney();
+            expected += (double) p.getMoney();
         }
-        expected = expected / numbers;
+        expected = expected / (double) numbers;
         money[turns + 1] = expected;
         if (turns + 1 < player.maxTurns) {
-            run(player, expected, turns + 1);
+            run(player, (int) expected, turns + 1);
         }
     }
     
@@ -39,9 +39,9 @@ public class RouletteSimulation implements Simulation{
     public double fitness(Mutatable player) {
         assert (player instanceof RoulettePlayer);
         ((RoulettePlayer) player).reset();
-        money = new int[((RoulettePlayer) player).maxTurns + 1];
-        money[0] = ((RoulettePlayer) player).getMoney();
-        run((RoulettePlayer) player, money[0], 0);
+        money = new double[((RoulettePlayer) player).maxTurns + 1];
+        money[0] = (double) ((RoulettePlayer) player).getMoney();
+        run((RoulettePlayer) player, (int) money[0], 0);
         
         double fitness = 0;
         ((RoulettePlayer) player).reset();
@@ -54,9 +54,9 @@ public class RouletteSimulation implements Simulation{
     
     public void show(RoulettePlayer player) {
         fitness(player);
-        System.out.printf("%5d ", money[0]);
+        System.out.printf("%5d ", (int) money[0]);
         for (int i = 0; i < player.maxTurns; i++) {
-            System.out.printf("%5d ", money[i + 1]);
+            System.out.printf("%5d ", (int) money[i + 1]);
         }
         System.out.println();
     }

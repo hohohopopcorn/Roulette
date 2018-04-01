@@ -44,7 +44,7 @@ public class GeneticAlgorithm {
     }
     
     private void mutation() {
-        double mutationRate = 0.0001;
+        double mutationRate = 0.001;
         
         for (int i = 0; i < (int) Math.floor((double) population.getLength() * mutationRate); i++) {
             int idx = StdRandom.uniform(population.getLength());

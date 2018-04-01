@@ -134,7 +134,7 @@ public class RoulettePlayer implements Mutatable {
         @Override
         public void mutate() {
             double mutationType = StdRandom.uniform();
-            double[] mutationBin = {0.05, 0.15, 0.45, 0.8, 1.0};
+            double[] mutationBin = {0.05, 0.15, 0.45, 0.6, 1.0};
             
             if (mutationType <= mutationBin[0]) { //complete reinitialize
                 init();
