@@ -92,7 +92,7 @@ public class RoulettePlayer implements Mutatable {
         
         void show() {
             for (int i = 0; i < policy.length; i++) {
-                System.out.printf("%d ", (int)(100.0 * policy[i]));
+                System.out.printf("%2d ", (int)(100.0 * policy[i]));
             }
             System.out.println();
             if (nextTurn != null) {
@@ -102,7 +102,7 @@ public class RoulettePlayer implements Mutatable {
         
         void init() {
             double sum = 0;
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < 20; j++) {
                 int i = StdRandom.uniform(policy.length);
                 policy[i] = Math.abs(StdRandom.gaussian());
                 sum += policy[i];
@@ -134,7 +134,7 @@ public class RoulettePlayer implements Mutatable {
         @Override
         public void mutate() {
             double mutationType = StdRandom.uniform();
-            double[] mutationBin = {0.30, 0.45, 0.50, 1.0};
+            double[] mutationBin = {0.1, 0.2, 0.25, 1.0};
             
             if (mutationType <= mutationBin[0]) { //complete reinitialize
                 init();

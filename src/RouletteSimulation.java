@@ -45,7 +45,7 @@ public class RouletteSimulation implements Simulation{
         for (int i = 0; i < trials; i++) {
             fitness[i] = 0;
             for (int j = 1; j < money[i].length; j++) {
-                fitness[i] += (double) money[i][j] / (double) money[i][0] * (double) j;
+                fitness[i] += ((double) money[i][j] - (double) money[i][0]) / (double) money[i][0] * (double) j;
             }
         }
         
