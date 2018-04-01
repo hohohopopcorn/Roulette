@@ -27,8 +27,8 @@ public class FindRouletteStrategy {
     }
     
     public static void main (String[] args) {
-        RouletteSimulation p = new RouletteSimulation(100000, new EuropeanRoulette(), 0.25);
-        FindRouletteStrategy Strategy = new FindRouletteStrategy(p, 1, 100, 100, 0.75);
+        RouletteSimulation p = new RouletteSimulation(new EuropeanRoulette());
+        FindRouletteStrategy Strategy = new FindRouletteStrategy(p, 1, 100, 1000000, 0.5);
         RoulettePlayer best = Strategy.run(1000000, p);
     }
 }

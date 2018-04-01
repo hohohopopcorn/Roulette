@@ -47,8 +47,7 @@ public class EuropeanRoulette extends RouletteGame {
         winnings[bet_options - 1] = 1;  //holding money
     }
     
-    void rollOnce(RoulettePlayer p) {
-        int num = roll();
+    void rollOnce(RoulettePlayer p, int num) {
         int newmoney = win(p, bet_options - 1);
         
         newmoney += single(p, num);
@@ -62,7 +61,7 @@ public class EuropeanRoulette extends RouletteGame {
         newmoney += oddEven(p, num);
         newmoney += column(p, num);
         
-        update(p, num, newmoney);
+        update(p, newmoney);
     }
     
     private int single(RoulettePlayer p, int num) {

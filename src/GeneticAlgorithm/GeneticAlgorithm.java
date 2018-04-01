@@ -17,6 +17,7 @@ public class GeneticAlgorithm {
     public Mutatable run() {
         selection();
         reproduction();
+        mutation();
         return population.get(0);
     }
     
@@ -39,6 +40,19 @@ public class GeneticAlgorithm {
         }
         for (int i = 0; i < emptySlots; i++) {
             population.insert(children[i]);
+        }
+    }
+    
+    private void mutation() {
+        double mutationRate = 0.0001;
+        
+        for (int i = 0; i < (int) Math.floor((double) population.getLength() * mutationRate); i++) {
+            int idx = StdRandom.uniform(population.getLength());
+            Mutatable mutatedGene = population.get(idx);
+            population.remove(idx);
+            
+            mutatedGene.mutate();
+            population.insert(mutatedGene);
         }
     }
     

@@ -3,33 +3,31 @@ import GeneticAlgorithm.Simulation;
 import edu.princeton.cs.introcs.StdStats;
 
 public class RouletteSimulation implements Simulation{
-    private int money[][];
-    private double fitness[];
-    private int trials;
+    private int[] money;
+    private int numbers;
     private RouletteGame game;
-    private double RISK_AVERSE = 1.0;
     
-    RouletteSimulation(int N, RouletteGame game, double risk) {
-        fitness = new double[N];
-        RISK_AVERSE = risk;
-        trials = N;
+    RouletteSimulation(RouletteGame game) {
+        this.numbers = game.numbers;
         this.game = game;
     }
     
-    private void run(RoulettePlayer player) {
-        money = new int[trials][player.maxTurns + 1];
-        for (int i = 0; i < trials; i++) {
-            player.reset();
-            money[i][0] = player.getMoney();
-            
-            //System.out.printf("%10d ", money[i][0]);
-            
-            for (int j = 0; j < player.maxTurns; j++) {
-                game.rollOnce(player);
-                money[i][j + 1] = player.getMoney();
-                //System.out.printf("%10d ", money[i][j + 1]);
+    private void run(RoulettePlayer player, int start, int turns) {
+        int expected = 0;
+        RoulettePlayer p = new RoulettePlayer(player);
+        
+        for (int i = 0; i < numbers; i++) {
+            p.reset();
+            for (int j = 0; j < turns; j++) {
+                p.update(start);
             }
-            //System.out.println();
+            game.rollOnce(p, i);
+            expected += p.getMoney();
+        }
+        expected = expected / numbers;
+        money[turns + 1] = expected;
+        if (turns + 1 < player.maxTurns) {
+            run(player, expected, turns + 1);
         }
     }
     
@@ -40,56 +38,31 @@ public class RouletteSimulation implements Simulation{
     @Override
     public double fitness(Mutatable player) {
         assert (player instanceof RoulettePlayer);
-        run((RoulettePlayer) player);
+        ((RoulettePlayer) player).reset();
+        money = new int[((RoulettePlayer) player).maxTurns + 1];
+        money[0] = ((RoulettePlayer) player).getMoney();
+        run((RoulettePlayer) player, money[0], 0);
         
-        for (int i = 0; i < trials; i++) {
-            fitness[i] = 0;
-            for (int j = 1; j < money[i].length; j++) {
-                fitness[i] += ((double) money[i][j] - (double) money[i][0]) / (double) money[i][0] * (double) j;
-            }
+        double fitness = 0;
+        ((RoulettePlayer) player).reset();
+        for (int i = 1; i <= ((RoulettePlayer) player).maxTurns; i++) {
+            fitness += ((double) money[i] - (double) money[0]) / (double) money[0] * (double) i;
         }
         
-        return RISK_AVERSE * confidenceLow() + (1.0 - RISK_AVERSE) * mean();
+        return fitness;
     }
     
     public void show(RoulettePlayer player) {
-        money = new int[trials][player.maxTurns + 1];
-        for (int i = 0; i < trials; i++) {
-            player.reset();
-            money[i][0] = player.getMoney();
-        
-            for (int j = 0; j < player.maxTurns; j++) {
-                game.rollOnce(player);
-                money[i][j + 1] = player.getMoney();
-            }
-        }
-    
-        System.out.printf("%5d ", money[0][0]);
+        fitness(player);
+        System.out.printf("%5d ", money[0]);
         for (int i = 0; i < player.maxTurns; i++) {
-            double average = 0;
-            for (int j = 0; j < trials; j++) {
-                average += (double) money[j][i + 1] / (double) trials;
-            }
-            System.out.printf("%5d ", (int)average);
+            System.out.printf("%5d ", money[i + 1]);
         }
         System.out.println();
     }
     
-    private double mean() {
-        return StdStats.mean(fitness);
-    }
-    private double stddev() {
-        return StdStats.stddev(fitness);
-    }
-    private double confidenceLow() {
-        return mean() - 1.96 * stddev() / Math.sqrt((double) fitness.length);
-    }
-    private double confidenceHigh() {
-        return mean() + 1.96 * stddev() / Math.sqrt((double) fitness.length);
-    }
-    
     public static void main(String[] args) {
-        RouletteSimulation p = new RouletteSimulation(100, new EuropeanRoulette(), 0.5);
+        RouletteSimulation p = new RouletteSimulation(new EuropeanRoulette());
         
         System.out.println(p.fitness(new RoulettePlayer(20, new EuropeanRoulette(), 100)));
     }
